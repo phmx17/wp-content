@@ -17,4 +17,30 @@ function university_features() {
 }
 add_action('after_setup_theme', 'university_features'); // hook this onto event 'after_setup_theme'
 // the events were added in the mu-plugins (must use plugins) folder, because they would go away on theme change.
+
+function university_adjust_queries($query) {
+  if (!is_admin() AND is_post_type_archive('program') AND $query->is_main_query()) {
+    $query->set('orderby', 'title'); 
+    $query->set('order', 'ASC'); 
+    $query->set('posts_per_page', '-1'); 
+  }
+
+  if (!is_admin() AND is_post_type_archive('event') AND $query->is_main_query()) { // 1.do not apply to admin panel 2.is in the archive event page 3. make sure it does not override another custom query; this query->set() should only affect the default url query
+    $today = date('Ymd');
+    $query->set('posts_per_page', '3');
+    $query->set('meta_key', 'event_date');
+    $query->set('orderby', 'meta_value_num');
+    $query->set('order', 'ASC');
+    $query->set('meta_query', array(
+      array(
+        'key' => 'event_date',
+        'compare' => '>=',
+        'value' => $today,  // filter out past events
+        'type' => 'numeric'
+      )
+    ));
+  }
+ 
+}
+add_action('pre_get_posts', 'university_adjust_queries')
 ?>
