@@ -14,6 +14,7 @@ while (have_posts()) {
     </div>
   </div>
 </div>
+
 <div class="container container--narrow page-section">  
 <!-- bread crumbs metabox --> 
   <div class="metabox metabox--position-up metabox--with-home-link">
@@ -24,9 +25,11 @@ while (have_posts()) {
     </p>
   </div><!-- close metabox -->
 
+  <!-- Display the links to related programs -->
   <div class="generic-content">
     <?php the_content();       
       $relatedPrograms = get_field('related_programs'); 
+      // use echo instead of dropping into php
       echo '<h3 class="headline headline--medium">Related Programs</h3>';
       echo '<ul class="link-list min-list">';
         // iterate over related programs
